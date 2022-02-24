@@ -2,11 +2,26 @@
 #include <cmath>
 #include <iostream>
 
+long double functionOfX(long double x)
+{
+    return (x*x*x - 6*x*x - 7);
+}
+
+long double firstDerivative(long double x)
+{
+    return (3*x*x - 12*x);
+}
+
+long double secondDerivative(long double x)
+{
+    return  (6*x-12);
+}
+
 void dichotomy(long double a, long double b, long double eps)
 {
     long double x, f_x, f_a, f_b;
-    f_a = a + log(a) - 0.5;
-    f_b = b + log(b) - 0.5;
+    f_a = functionOfX(a);
+    f_b = functionOfX(b);
 
     if(f_a*f_b > 0)
     {
@@ -14,12 +29,14 @@ void dichotomy(long double a, long double b, long double eps)
         return;
     }
 
+    int iter = 0;
     while((b-a) > eps)
     {
+        iter++;
         x = (a+b)/2;
-        f_x = x + log(x) - 0.5;
-        f_a = a + log(a) - 0.5;
-        f_b = b + log(b) - 0.5;
+        f_x = functionOfX(x);
+        f_a = functionOfX(a);
+        f_b = functionOfX(b);
 
         if(f_x*f_a > 0)
         {
@@ -31,45 +48,42 @@ void dichotomy(long double a, long double b, long double eps)
             b = x;
         }
 
-        std::cout << "| a = " << a << " | b = " << b << " | x = " << x << " | f(x) = " << f_x << " |" << std::endl;
+        std::cout << iter << ". " <<  "| a = " << a << " | b = " << b << " | x = " << x << " | f(x) = " << f_x << " |" << std::endl;
     }
 }
 
 void hordes(long double a, long double b, long double eps)
 {
-   long double f_AII = 1 + 1/a;
-   long double f_A = a + log(a) - 0.5;
-   long double f_B = b + log(b) - 0.5;
-
-   long double c, s, f_c, f_s;
-
-   if(f_A*f_B > 0)
+   if(functionOfX(a)*functionOfX(b) > 0)
    {
        std::cout << "Wrong values of a and b" << std::endl;
        return;
    }
-   if(f_A*f_AII > 0)
-   {
-       c = a;
-       f_c = f_A;
-       s = b;
-       f_s = f_B;
-   } else
+
+   long double c, s;
+
+   if(firstDerivative(a)* secondDerivative(a) > 0)
    {
        c = b;
-       f_c = f_B;
        s = a;
-       f_s = f_A;
+   } else
+   {
+       c = a;
+       s = b;
    }
 
-
-    long double cprev;
-    do
+    long double prev;
+    int iter = 0;
+    while(true)
     {
-        cprev = c;
-        c = c - ((f_c)*(s-c))/(f_s-f_c);
-        f_c = c + log(c) - 0.5;
-        std::cout << "| x = " << c << " | f(x) = " << f_c << std::endl;
-    } while(fabs(c - cprev) > eps);
 
+        iter++;
+        prev = c;
+        c = c - (functionOfX(c)*(s-c))/(functionOfX(s)- functionOfX(c));
+        if(fabs(c-prev) < eps)
+        {
+            break;
+        }
+        std::cout << iter << ". | x = " << c << " | f(x) = " << functionOfX(c) << " | " << std::endl;
+    }
 }
