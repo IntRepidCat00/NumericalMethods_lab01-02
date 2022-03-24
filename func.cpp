@@ -67,7 +67,7 @@ void hordes(long double a, long double b, long double eps)
 
    long double c, s;
 
-   if(firstDerivative(a)* secondDerivative(a) > 0)
+   if(functionOfX(a)* secondDerivative(a) > 0)
    {
        c = b;
        s = a;
@@ -78,18 +78,24 @@ void hordes(long double a, long double b, long double eps)
    }
 
     long double prev;
+    long double dif;
     int iter = 0;
     while(true)
     {
 
         iter++;
         prev = c;
-        c = c - (functionOfX(c)*(s-c))/(functionOfX(s)- functionOfX(c));
-        if(fabs(c-prev) < eps)
+        c = c - (functionOfX(c)*(s-c))/(functionOfX(s) - functionOfX(c));
+        std::cout << iter << ". | x = " << c << " | f(x) = " << functionOfX(c) << " | " << std::endl;
+        dif = c - prev;
+        if(dif < 0)
+        {
+            dif*=-1;
+        }
+        if(dif < eps)
         {
             break;
         }
-        std::cout << iter << ". | x = " << c << " | f(x) = " << functionOfX(c) << " | " << std::endl;
     }
 }
 
