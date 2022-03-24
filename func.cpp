@@ -7,6 +7,11 @@ long double xForIter(long double x)
     return (7/(x*x) + 6);
 }
 
+long double firstDerivativeForIter(long double x)
+{
+    return (-14/(x*x*x));
+}
+
 long double functionOfX(long double x)
 {
     return (x*x*x - 6*x*x - 7);
@@ -132,6 +137,11 @@ void iterations(long double a, long double b, long double eps)
     if(functionOfX(a) * functionOfX(b) > 0)
     {
         std::cout << "Wrong values of a and b" << std::endl;
+        return;
+    }
+    if(!(firstDerivativeForIter(a) < 1) || !(firstDerivativeForIter(b) < 1))
+    {
+        std::cout << "Wrong function fi(x)" << std::endl;
         return;
     }
     long double A, x, xprev;
